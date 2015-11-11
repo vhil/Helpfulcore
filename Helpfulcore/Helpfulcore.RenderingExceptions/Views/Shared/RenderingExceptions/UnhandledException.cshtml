@@ -1,0 +1,31 @@
+﻿@model Helpfulcore.RenderingExceptions.Models.RenderingExceptionViewModel
+
+@if (!Sitecore.Context.PageMode.IsNormal || !HttpContext.Current.IsCustomErrorEnabled)
+{
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<style> 
+		.exception-messages {  font-size: 1.4em !important; margin: 20px 0; } .exception-messages .error-header { color: #fff; padding: 10px; width: 90%; height: 100%; } .exception-messages li { display: block; padding: 10px; } .exception-messages li:last-child { border-bottom: none; } .exception-messages { border: solid 1px #900; color: #900; } .exception-messages .error-header { background: #900; }  .exception-messages li { border-bottom: dashed 1px #900; }  .btn-expand { width: 10%; height: 100%; background-color: grey; padding: 10px; color: white; text-align: center; } .btn-expand:hover { cursor: pointer; } .exception-messages .header {height:60px;} .right {float:right;} .left {float:left;} 
+	</style>
+
+	<div class="exception-messages">
+		<div class="header">
+			<div class="error-header left">
+				<h4><span>Error while rendering view [@Model.RenderingName]. Please, make sure the rendering is configured properly or contact your administrator.</span></h4>
+			</div>
+			<div class="btn-expand right collapsed" onclick="collapseOrShow(this)">
+				<h4><span>Expand</span></h4>
+			</div>
+			<div style="clear: both"></div>
+		</div>
+
+		<ul class="error-details" style="display: none;">
+			@foreach (var line in Model.Exception.ToString().Split(new[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()))
+			{
+				<li @(line.StartsWith("at") ? "style=padding-left:40px;" : "")>@line</li>
+			}
+		</ul>
+	</div>
+	<script type="text/javascript">
+		function collapseOrShow(obj) { var button = jQuery(obj); if (button.hasClass("collapsed")) { button.removeClass("collapsed"); button.addClass("expanded"); button.find("h4 span").html("Collapse"); button.parent().parent().find(".error-details").show(); return true; } else if (button.hasClass("expanded")) { button.removeClass("expanded"); button.addClass("collapsed"); button.find("h4 span").html("Expand"); button.parent().parent().find(".error-details").hide(); return true; } return false; };
+	</script>
+}
