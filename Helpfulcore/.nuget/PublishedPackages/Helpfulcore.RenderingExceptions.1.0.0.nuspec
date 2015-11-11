@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Helpfulcore.RenderingExceptions</id>
+        <version>1.0.0</version>
+        <title>Helpfulcore Rendering Exceptions</title>
+        <authors>Vladimir Hil</authors>
+        <owners>Vladimir Hil</owners>
+        <projectUrl>https://github.com/vhil/Helpfulcore</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>A tool for informative exception handling for sitecore solutions per rendering basis.</description>
+        <tags>Sitecore, Renderings, Error Handling</tags>
+    </metadata>
+    <files>
+        <file src="Helpfulcore.RenderingExceptions\App_Config\Include\Helpfulcore\Helpfulcore.RenderingExceptions.config" target="App_Config\Include\Helpfulcore\Helpfulcore.RenderingExceptions.config" />
+        <file src="Helpfulcore.RenderingExceptions\bin\Debug\Helpfulcore.RenderingExceptions.dll" target="lib\Helpfulcore.RenderingExceptions.dll" />
+        <file src="Helpfulcore.RenderingExceptions\Views\Shared\RenderingExceptions\RenderingException.cshtml" target="Views\Shared\RenderingExceptions\RenderingException.cshtml" />
+        <file src="Helpfulcore.RenderingExceptions\Views\Shared\RenderingExceptions\RenderingParametersException.cshtml" target="Views\Shared\RenderingExceptions\RenderingParametersException.cshtml" />
+        <file src="Helpfulcore.RenderingExceptions\Views\Shared\RenderingExceptions\UnhandledException.cshtml" target="Views\Shared\RenderingExceptions\UnhandledException.cshtml" />
+    </files>
+</package>

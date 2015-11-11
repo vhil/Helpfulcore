@@ -87,6 +87,7 @@
     <Content Include="App_Config\Include\Helpfulcore\Helpfulcore.RenderingExceptions.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Helpfulcore.nuspec" />
     <None Include="packages.config" />
     <None Include="Views\Shared\RenderingExceptions\RenderingException.cshtml" />
     <None Include="Views\Shared\RenderingExceptions\RenderingParametersException.cshtml" />
