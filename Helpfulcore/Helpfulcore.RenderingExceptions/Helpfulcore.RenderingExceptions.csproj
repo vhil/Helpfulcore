@@ -77,8 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\RenderingExceptionsController.cs" />
-    <Compile Include="RenderingException.cs" />
-    <Compile Include="RenderingParametersException.cs" />
     <Compile Include="Models\RenderingExceptionViewModel.cs" />
     <Compile Include="Pipelines\ExecuteRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -87,11 +85,16 @@
     <Content Include="App_Config\Include\Helpfulcore\Helpfulcore.RenderingExceptions.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Helpfulcore.nuspec" />
     <None Include="packages.config" />
     <None Include="Views\Shared\RenderingExceptions\RenderingException.cshtml" />
     <None Include="Views\Shared\RenderingExceptions\RenderingParametersException.cshtml" />
     <None Include="Views\Shared\RenderingExceptions\UnhandledException.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Helpfulcore.RenderingExceptions.Types\Helpfulcore.RenderingExceptions.Types.csproj">
+      <Project>{53ebfd02-8fcc-4385-938c-55aab5f3d990}</Project>
+      <Name>Helpfulcore.RenderingExceptions.Types</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

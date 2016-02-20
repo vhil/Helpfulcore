@@ -1,15 +1,17 @@
 ﻿@model Helpfulcore.RenderingExceptions.Models.RenderingExceptionViewModel
-
 @if (!Sitecore.Context.PageMode.IsNormal || !HttpContext.Current.IsCustomErrorEnabled)
 {
 	<style>
-		.status-messages { font-size: 1.4em !important; margin: 20px 0; } .status-messages .status-header { color: #fff; padding: 10px; } .status-messages li { display: block; padding: 10px; } .status-messages li:last-child { border-bottom: none; } .status-messages { border: solid 1px #000a3e; color: #000a3e; } .status-messages .status-header { background: #000a3e; } .status-messages li { border-bottom: dashed 1px #000a3e; } 
+		.ScRdrPrmExMessages { all: unset; margin: 20px 0; color: #000a3e; font-size: initial; font-family: Arial, Helvetica, sans-serif; word-wrap: break-word; }
+		.ScRdrPrmExMessages .ScRdrPrmExHeader { color: #fff; background: #000a3e; border-radius: 5px; padding: 5px 10px 5px 10px; height: 100%; width: 100%; font-size: initial; position: relative; }
+		.ScRdrPrmExMessages li { all: unset; }
+		.ScRdrPrmExMessages ul { all: unset; display: block; padding: 10px; border: dashed 1px #000a3e; border-top: none; }
 	</style>
 
-	<div class="status-messages">
-		<h4 class="status-header">
+	<div class="ScRdrPrmExMessages">
+		<div class="ScRdrPrmExHeader">
 			Some configuration is missing on the view [@Model.RenderingName] Please, make sure the rendering is configured properly.
-		</h4>
+		</div>
 		<ul>
 			<li>
 				@Model.Exception.Message

@@ -26,12 +26,26 @@ namespace Helpfulcore.RenderingExceptions.Pipelines.RenderRendering
                 if (renderingErrorException != null)
                 {
                     this.RenderRenderingError(args, renderingErrorException as RenderingException);
-                    Log.Warn(renderingErrorException.Message, renderingErrorException, this);
+					
+					Log.Warn(
+						string.Format(
+							"Error while rendering view [{0}]. Please, make sure the rendering is configured properly. {1}", 
+							GetRenderingName(args), 
+							renderingErrorException.Message),
+						null,
+						this);
                 }
                 else
                 {
 					this.RenderUnhandledException(args, ex);
-					Log.Error(ex.Message, ex, this);
+
+					Log.Error(
+						string.Format(
+							"Error while rendering view [{0}]. {1}",
+							GetRenderingName(args),
+							ex.Message),
+						ex,
+						this);
                 }
             }
         }
@@ -64,10 +78,15 @@ namespace Helpfulcore.RenderingExceptions.Pipelines.RenderRendering
 
 		private static RenderingExceptionViewModel GetRenderingErrorModel(RenderRenderingArgs args, Exception ex)
         {
-			return new RenderingExceptionViewModel(args.Rendering.RenderingItem != null ? args.Rendering.RenderingItem.Name : string.Empty, ex);
+			return new RenderingExceptionViewModel(GetRenderingName(args), ex);
         }
 
-        private static ControllerContext GetControllerContext(MvcPipelineArgs args)
+		private static string GetRenderingName(RenderRenderingArgs args)
+		{
+			return args.Rendering.RenderingItem != null ? args.Rendering.RenderingItem.Name : string.Empty;
+		}
+
+		private static ControllerContext GetControllerContext(MvcPipelineArgs args)
         {
 			return new ControllerContext(args.PageContext.RequestContext, new RenderingExceptionsController());
         }
