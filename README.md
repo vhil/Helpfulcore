@@ -1,6 +1,6 @@
 ### Helpfulcore - helpful features for Sitecore
 # Helpfulcore Rendering Exceptions
-Handling exceptions in Sitecore solution per-rendering basis
+Handling exceptions in Sitecore solution per-rendering basis.
 In order to use this module, please install this nuget package to your Sitecore website project:
 ```
 Install-Package Helpfulcore.RenderingExceptions
