@@ -2,17 +2,18 @@
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
+using Helpfulcore.Logging;
 using Sitecore.Mvc.Pipelines;
 using Sitecore.Mvc.Pipelines.Response.RenderRendering;
 using Helpfulcore.RenderingExceptions.Controllers;
 using Helpfulcore.RenderingExceptions.Models;
-using Sitecore.Diagnostics;
+using Sitecore.Configuration;
 
 namespace Helpfulcore.RenderingExceptions.Pipelines.RenderRendering
 {
 	public class ExecuteRenderer : Sitecore.Mvc.Pipelines.Response.RenderRendering.ExecuteRenderer
-    {
-		protected virtual string CurrentUrl
+	{
+	    protected virtual string CurrentUrl
 		{
 			get { return HttpContext.Current != null ? HttpContext.Current.Request.Url.AbsoluteUri : string.Empty; }
 		}
@@ -27,33 +28,37 @@ namespace Helpfulcore.RenderingExceptions.Pipelines.RenderRendering
             {
                 args.Cacheable = false;
 
-                var renderingErrorException = GetRenderingException(ex);
+                var renderingErrorException = this.GetRenderingException(ex);
 	            
 	            if (renderingErrorException != null)
                 {
                     this.RenderRenderingError(args, renderingErrorException as RenderingException);
-					
-					Log.Warn(
-						string.Format(
-							"Error while rendering view [{0}] on page {1}. Please, make sure the rendering is configured properly. {2}", 
-							this.GetRenderingName(args),
- 							this.CurrentUrl,
-							renderingErrorException.Message),
-						null,
-						this);
+
+                    if (Logger != null)
+                    {
+                        Logger.Warn(
+                            "Error while rendering view [{0}] on page '{1}. Please, make sure the rendering is configured properly. {2}",
+                            this,
+                            null,
+                            this.GetRenderingName(args),
+                            this.CurrentUrl,
+                            renderingErrorException.Message);
+                    }
                 }
                 else
                 {
 					this.RenderUnhandledException(args, ex);
 
-					Log.Error(
-						string.Format(
-							"Error while rendering view [{0}] on page {1}. {2}",
-							this.GetRenderingName(args),
-							this.CurrentUrl,
-							ex.Message),
-						ex,
-						this);
+                    if (Logger != null)
+                    {
+                        Logger.Error(
+                            "Error while rendering view [{0}] on page '{1}'. {2}",
+                            this,
+                            ex,
+                            this.GetRenderingName(args),
+                            this.CurrentUrl,
+                            ex.Message);
+                    }
                 }
             }
         }
@@ -86,7 +91,7 @@ namespace Helpfulcore.RenderingExceptions.Pipelines.RenderRendering
 
 		protected virtual RenderingExceptionViewModel GetRenderingErrorModel(RenderRenderingArgs args, Exception ex)
         {
-			return new RenderingExceptionViewModel(GetRenderingName(args), ex);
+			return new RenderingExceptionViewModel(this.GetRenderingName(args), ex);
         }
 
 		protected virtual string GetRenderingName(RenderRenderingArgs args)
@@ -108,7 +113,7 @@ namespace Helpfulcore.RenderingExceptions.Pipelines.RenderRendering
 
 			if (ex.InnerException != null)
 			{
-				return GetRenderingException(ex.InnerException);
+				return this.GetRenderingException(ex.InnerException);
 			}
 
 			return null;
@@ -116,21 +121,42 @@ namespace Helpfulcore.RenderingExceptions.Pipelines.RenderRendering
 
 		protected virtual void RenderRenderingError(RenderRenderingArgs args, RenderingException ex)
 		{
-			var viewName = "RenderingExceptions/" + GetViewNameFromException(ex);
+			var viewName = "RenderingExceptions/" + this.GetViewNameFromException(ex);
 
-			args.Writer.Write(this.RenderViewToString(viewName, GetRenderingErrorModel(args, ex), GetControllerContext(args)));
+			args.Writer.Write(this.RenderViewToString(viewName, this.GetRenderingErrorModel(args, ex), this.GetControllerContext(args)));
 		}
 
 		protected virtual void RenderUnhandledException(RenderRenderingArgs args, Exception ex)
 		{
 			var viewName = "RenderingExceptions/UnhandledException";
 
-			args.Writer.Write(this.RenderViewToString(viewName, GetRenderingErrorModel(args, ex), GetControllerContext(args)));
+			args.Writer.Write(this.RenderViewToString(viewName, this.GetRenderingErrorModel(args, ex), this.GetControllerContext(args)));
 		}
 
 		protected virtual string GetViewNameFromException(Exception exception)
 		{
 			return exception.GetType().Name;
 		}
+
+        private static readonly object LoggerSyncRoot = new object();
+        private static ILoggingService logger;
+        protected static ILoggingService Logger
+        {
+            get
+            {
+                if (logger == null)
+                {
+                    lock (LoggerSyncRoot)
+                    {
+                        if (logger == null)
+                        {
+                            logger = Factory.CreateObject("helpfulcore/renderingExceptions/logger", false) as ILoggingService;
+                        }
+                    }
+                }
+
+                return logger;
+            }
+        }
     }
 }
