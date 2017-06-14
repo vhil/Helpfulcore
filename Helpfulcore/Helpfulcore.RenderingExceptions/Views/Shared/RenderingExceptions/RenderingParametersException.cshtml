@@ -19,3 +19,7 @@
 		</ul>
 	</div>
 }
+else if (HttpContext.Current.IsCustomErrorEnabled)
+{
+	<div style="color:darkcyan; font-size: smaller;">Error while rendering view [@Model.RenderingName].</div>
+}
